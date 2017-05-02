@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+/**
+ * Precedent
+ *
+ * Meta-templating, for when you want templates to create templates.
+ *
+ * -*- mode: js -*-
+ * vim: expandtab:ts=4:sw=4
+ */
+
+var precidentExecution = require(__dirname+'/../Precedent-Command.js');
