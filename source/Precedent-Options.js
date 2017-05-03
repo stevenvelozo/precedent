@@ -15,7 +15,7 @@ var _OptionsDefault =
     Product: "Precedent",
 	ProductVersion: require(__dirname+'/../package.json').version,
 
-    LogStreams:[{streamtype:'prettystream'}],
+    LogStreams:[{streamtype:'prettystream',level:'trace'}],
 
 	Command: 'Info',
 
