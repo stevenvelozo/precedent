@@ -7,37 +7,10 @@
 *
 * @description Process text streams, parsing out meta-template expressions.
 */
-var libLodash = require('lodash');
-
 var Precedent = function()
 {
 	function createNew(pSettings)
 	{
-		// If a valid object isn't passed in, return a constructor
-		if (typeof(pSettings) !== 'object')
-		{
-			return {new: createNew};
-		}
-
-		var _Fable = false;
-		// If this is a Fable object, use it.
-		if (pSettings.hasOwnProperty('fable'))
-		{
-			_Fable = pSettings.fable;
-			// Fill in any unset settings from the default options.
-			_Fable.settingsManager.fill(require(__dirname+'/Precedent-Options.js'));
-		}
-		else
-		{
-			// See if any settings were passed in
-			var tmpPassedSettings = (typeof(pSettings) === 'object') ? pSettings : {};
-			// Get the default settings (and command-line options)
-			var tmpSettings = libLodash.assign(require(__dirname+'/Precedent-Options.js'), tmpPassedSettings);
-			// Construct a new fable
-			_Fable = require('fable').new(tmpSettings);
-		}
-
-		//_Fable.log.info('Initializing precedent...');
 		var _ParseTree = {};
 		
 		var addChild = (pTree, pPattern, pIndex) =>
@@ -174,7 +147,7 @@ var Precedent = function()
 		return oPrecedent;
 	}
 
-	return createNew();
+	return {new: createNew};
 };
 
 module.exports = new Precedent();

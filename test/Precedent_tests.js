@@ -10,10 +10,9 @@ var Chai = require("chai");
 var Expect = Chai.expect;
 var Assert = Chai.assert;
 
-var loadPrecedentModule = (pParameters) =>
+var loadPrecedentModule = () =>
 {
-	var tmpParameters = (typeof(pParameters) === 'object') ? pParameters : {};
-	return require('../source/Precedent.js').new(tmpParameters);
+	return require('../source/Precedent.js').new();
 };
 
 var configPrecedent = (pModule) =>

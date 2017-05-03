@@ -1,6 +1,6 @@
 {
   "name": "precedent",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Precedent Meta-Templating",
   "main": "source/Stricture.js",
   "bin": {
@@ -29,9 +29,5 @@
     "mocha": "3.3.0"
   },
   "dependencies": {
-    "async": "2.4.0",
-    "fable": "~1.0.1",
-    "lodash": "^4.17.4",
-    "yargs": "^7.1.0"
   }
 }

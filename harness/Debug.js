@@ -5,7 +5,7 @@
 *
 * @author      Steven Velozo <steven@velozo.com>
 */
-var testPrecedent = require('../source/Precedent.js').new({});
+var testPrecedent = require('../source/Precedent.js').new();
 
 testPrecedent.addPattern('<%', '%>', 'JUNKED_THIS_DATA');
 // This one gets the count of the inner string...
