@@ -1,7 +1,7 @@
 # Precedent
 Precedent meta-templating engine, for when you want templates ... for templates.
 
-[![Code Climate](https://codeclimate.com/github/stevenvelozo/precedent/badges/gpa.svg)](https://codeclimate.com/github/stevenvelozo/precedent) [![Coverage Status](https://coveralls.io/repos/stevenvelozo/precedent/badge.svg?branch=master)](https://coveralls.io/r/stevenvelozo/precedent?branch=master) [![Build Status](https://travis-ci.org/stevenvelozo/precedent.svg?branch=master)](https://travis-ci.org/stevenvelozo/precedent) [![Dependency Status](https://david-dm.org/stevenvelozo/precedent.svg)](https://david-dm.org/stevenvelozo/precedent) [![devDependency Status](https://david-dm.org/stevenvelozo/precedent/dev-status.svg)](https://david-dm.org/stevenvelozo/precedent#info=devDependencies)
+[![Code Climate](https://codeclimate.com/github/stevenvelozo/precedent/badges/gpa.svg)](https://codeclimate.com/github/stevenvelozo/precedent) [![Build Status](https://travis-ci.org/stevenvelozo/precedent.svg?branch=master)](https://travis-ci.org/stevenvelozo/precedent) [![Dependency Status](https://david-dm.org/stevenvelozo/precedent.svg)](https://david-dm.org/stevenvelozo/precedent) [![devDependency Status](https://david-dm.org/stevenvelozo/precedent/dev-status.svg)](https://david-dm.org/stevenvelozo/precedent#info=devDependencies)
 
 ## Template Patterns
 
@@ -30,7 +30,9 @@ This is just a short message for David Bowie.
 This is just a short message for David Bowie.  We hope to ignore the previous text.
 ```
 
-### precedent.addPattern(patternStart, patternEnd, parser)
+---
+
+## precedent.addPattern(patternStart, patternEnd, parser)
 
 Add a pattern to the string processor.
 
@@ -57,3 +59,17 @@ The ending portion of a pattern.
 ##### parser
 Type: `String` or `Function`
 Default: Echo content between the pattern start and end.
+
+
+## precedent.parseString(contentString)
+
+Parse a string with the processor.
+
+```javascript
+libPrecedent.parseString('This is just a short message for {Name}.'
+```
+
+#### contentString
+Type: `String`
+
+The string of content to parseg
