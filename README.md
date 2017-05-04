@@ -60,6 +60,7 @@ The ending portion of a pattern.
 Type: `String` or `Function`
 Default: Echo content between the pattern start and end.
 
+---
 
 ## precedent.parseString(contentString)
 

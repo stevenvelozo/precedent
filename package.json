@@ -1,10 +1,10 @@
 {
   "name": "precedent",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Precedent Meta-Templating",
-  "main": "source/Stricture.js",
+  "main": "source/Precedent.js",
   "bin": {
-    "precedent": "./bin/precedent"
+    "precedent": "./bin/Precedent"
   },
   "scripts": {
     "start": "node source/Precedent.js",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stevenvelozo/stricture.git"
+    "url": "https://github.com/stevenvelozo/precedent.git"
   },
   "keywords": [
     "logging"
@@ -21,7 +21,7 @@
   "author": "Steven Velozo <steven@velozo.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/stevenvelozo/stricture/issues"
+    "url": "https://github.com/stevenvelozo/precedent/issues"
   },
   "devDependencies": {
     "chai": "3.5.0",
