@@ -89,7 +89,7 @@ var Precedent = function()
 			{
 				// ... this is the end of a pattern, cut off the end tag and parse it.
 				// Trim the start adn end tags off the output buffer now
-				pParserState.OutputBuffer = pParserState.Pattern.Parse(pParserState.OutputBuffer.substr(0, pParserState.OutputBuffer.length - (pParserState.Pattern.PatternStart.length+pParserState.Pattern.PatternEnd.length)));
+				pParserState.OutputBuffer = pParserState.Pattern.Parse(pParserState.OutputBuffer.substr(pParserState.Pattern.PatternStart.length, pParserState.OutputBuffer.length - (pParserState.Pattern.PatternStart.length+pParserState.Pattern.PatternEnd.length)));
 				// Flush the output buffer.
 				flushOutputBuffer(pParserState);
 				// End pattern mode
@@ -102,14 +102,14 @@ var Precedent = function()
 		var parseCharacter = (pCharacter, pParserState) =>
 		{
 			// (1) If we aren't in a pattern match, and we aren't potentially matching, and this may be the start of a new pattern....
-			if (!pParserState.Pattern && !pParserState.PatternMatch && _ParseTree.hasOwnProperty(pCharacter))
+			if (!pParserState.PatternMatch && _ParseTree.hasOwnProperty(pCharacter))
 			{
 				// ... assign the node as the matched node.
 				assignNode(_ParseTree[pCharacter], pParserState);
 				appendOutputBuffer(pCharacter, pParserState);
 			}
 			// (2) If we are in a pattern match (actively seeing if this is part of a new pattern token)
-			else if (!pParserState.Pattern && pParserState.PatternMatch)
+			else if (pParserState.PatternMatch)
 			{
 				// If the pattern has a subpattern with this key
 				if (pParserState.PatternMatch.hasOwnProperty(pCharacter))
