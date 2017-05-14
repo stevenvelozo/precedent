@@ -118,6 +118,43 @@ suite
 						fDone();
 					}
 				);
+				test
+				(
+					'Identifier fallback...',
+					(fDone) =>
+					{
+						var testPrecedent = loadPrecedentModule();
+						testPrecedent.addPattern('<', '>', 'SHORTEST_MATCH');
+						testPrecedent.addPattern('<<', '>', 'MEDIUM_MATCH');
+						testPrecedent.addPattern('<<EXTRALONG', '>', 'EXTRA_LONG_MATCH');
+
+						var tmpTestStrings = [
+							'Match this <> and this <here> please.',
+							'Match this SHORTEST_MATCH and this SHORTEST_MATCH please.',
+
+							'Match this <<> and this <<here> please.',
+							'Match this MEDIUM_MATCH and this MEDIUM_MATCH please.',
+
+							'Match this <<EXTRA> and this <<here> please.',
+							'Match this MEDIUM_MATCH and this MEDIUM_MATCH please.',
+
+							'Match this <<EXTRALONG> and this <<here> please.',
+							'Match this EXTRA_LONG_MATCH and this MEDIUM_MATCH please.',
+
+							'Match this <<<<> and this <here> please.',
+							'Match this MEDIUM_MATCH and this SHORTEST_MATCH please.'
+						];
+
+						var	tmpResult = '';
+						// Test every pair in TestStrings
+						for (var i = 0; i < tmpTestStrings.length; i+=2)
+						{
+							tmpResult = testPrecedent.parseString(tmpTestStrings[i]);
+							Expect(tmpResult).to.equal(tmpTestStrings[i+1]);
+						}
+						fDone();
+					}
+				);
 			}
 		);
 	}
