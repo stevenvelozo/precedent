@@ -1,0 +1,27 @@
+{
+  "name": "precedent",
+  "version": "1.0.5",
+  "description": "Precedent metatemplating library",
+  "main": "dist/precedent.latest.min.js",
+  "authors": [
+    "steven velozo <steven@velozo.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/stevenvelozo/precedent",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "bin",
+    "source",
+    "coverage",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}
