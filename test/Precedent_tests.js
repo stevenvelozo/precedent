@@ -8,11 +8,13 @@
 
 var Chai = require("chai");
 var Expect = Chai.expect;
-var Assert = Chai.assert;
+//var Assert = Chai.assert;
+
+var libPrecedent = require('../source/Precedent.js');
 
 var loadPrecedentModule = () =>
 {
-	return require('../source/Precedent.js').new();
+	return new libPrecedent();
 };
 
 var configPrecedent = (pModule) =>
@@ -51,7 +53,7 @@ suite
 						var testPrecedent = loadPrecedentModule();
 						// Instantiate a metatemplate processor
 						Expect(testPrecedent).to.be.an('object', 'Precedent should initialize as an object directly from the require statement.');
-						Expect(testPrecedent.tree).to.be.an('object');
+						Expect(testPrecedent.ParseTree).to.be.an('object');
 						Expect(testPrecedent.addPattern).to.be.a('function');
 						Expect(testPrecedent.parseString).to.be.a('function');
 						fDone();
@@ -64,9 +66,9 @@ suite
 					{
 						var testPrecedent = loadPrecedentModule();
 						
-						Expect(Object.keys(testPrecedent.tree).length).to.equal(0, 'There should be an empty tree on initialization.');
+						Expect(Object.keys(testPrecedent.ParseTree).length).to.equal(0, 'There should be an empty tree on initialization.');
 						configPrecedent(testPrecedent);
-						Expect(Object.keys(testPrecedent.tree).length).to.equal(2, 'The tree should grow properly.');
+						Expect(Object.keys(testPrecedent.ParseTree).length).to.equal(2, 'The tree should grow properly.');
 
 						//console.log(JSON.stringify(testPrecedent.tree,null,4));
 						
