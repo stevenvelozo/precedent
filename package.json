@@ -1,6 +1,6 @@
 {
   "name": "precedent",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Precedent Meta-Templating",
   "main": "source/Precedent.js",
   "bin": {
@@ -24,10 +24,19 @@
     "url": "https://github.com/stevenvelozo/precedent/issues"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browserify": "^14.4.0",
     "chai": "3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-uglify": "^3.0.0",
     "istanbul": "0.4.5",
-    "mocha": "3.3.0"
+    "mocha": "3.3.0",
+    "run-sequence": "^1.2.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
