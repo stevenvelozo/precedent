@@ -8,5 +8,11 @@
 */
 
 // Load the precedent module into the browser global automatically.
-var Precedent = require('./Precedent.js');
-module.exports = Precedent;
+var libPrecedent = require('./Precedent.js');
+
+if ((typeof(window) == 'object') && (!window.hasOwnProperty('Precedent')))
+{
+	window.Precedent = libPrecedent;
+}
+
+module.exports = libPrecedent;

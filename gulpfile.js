@@ -1,68 +1,62 @@
-/**
-* Precedent Meta-templating Web Build Package
-*
-* @license     MIT
-*
-* @author      Steven Velozo <steven@velozo.com>
-*/
-var _Version    = require('./package.json').version;
+'use strict';
 
-var libGulp        = require('gulp');
+const libBrowserify = require('browserify');
+const libGulp = require('gulp');
 
-var libBrowserify  = require('browserify');
-var libBabelify    = require('babelify');
-var libVinylSource = require('vinyl-source-stream');
-var libVinylBuffer = require('vinyl-buffer');
-var libUglify      = require('gulp-uglify');
-var libRename      = require('gulp-rename');
-var libSourceMaps  = require('gulp-sourcemaps');
-var libRunSequence = require('run-sequence');
+const libVinylSourceStream = require('vinyl-source-stream');
+const libVinylBuffer = require('vinyl-buffer');
 
-libGulp.task('copy-latest-release', ['build-release'],
-    ()=>
+const libTerser = require('gulp-terser');
+const libBuble = require('gulp-buble');
+const libSourcemaps = require('gulp-sourcemaps');
+const libGulpUtil = require('gulp-util');
+
+// Build the module for the browser
+//   This gulp task is taken from the gulp recipe repository:
+//   https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
+libGulp.task('minified',
+() => {
+    // set up the custom browserify instance for this task
+    var tmpBrowserify = libBrowserify(
     {
-        libGulp.src('./dist/precedent.'+_Version+'.min.js')
-            .pipe(libRename('precedent.latest.min.js'))
-            .pipe(libGulp.dest('./dist'));
+        entries: './source/Precedent-Browser-Shim.js',
+        standalone: 'Precedent',
+        debug: true
     });
 
-libGulp.task('build-release',
-    ()=>
-    {
-        // app.js is your main JS file with all your module inclusions
-        return libBrowserify({entries: './source/Precedent', debug: false})
-            .transform("babelify", { presets: ["es2015"] })
-            .bundle()
-            .pipe(libVinylSource('precedent.'+_Version+'.min.js'))
+    return tmpBrowserify.bundle()
+        .pipe(libVinylSourceStream('precedent.min.js'))
+        .pipe(libVinylBuffer())
+        .pipe(libSourcemaps.init({loadMaps: true}))
+                // Add transformation tasks to the pipeline here.
+                .pipe(libTerser())
+                .on('error', libGulpUtil.log)
+        .pipe(libSourcemaps.write('./'))
+        .pipe(libGulp.dest('./dist/'));
+});
+
+// Build the module for the browser
+//   This gulp task is taken from the gulp recipe repository:
+//   https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
+libGulp.task('debug',
+    () => {
+        // set up the custom browserify instance for this task
+        var tmpBrowserify = libBrowserify(
+        {
+            entries: './source/Precedent-Browser-Shim.js',
+            standalone: 'Precedent',
+            debug: true
+        });
+
+        return tmpBrowserify.bundle()
+            .pipe(libVinylSourceStream('precedent.js'))
             .pipe(libVinylBuffer())
-            .pipe(libSourceMaps.init())
-            .pipe(libUglify())
-            .pipe(libSourceMaps.write('./'))
-            .pipe(libGulp.dest('./dist'));
-    }
+                    .on('error', libGulpUtil.log)
+            .pipe(libGulp.dest('./dist/'));
+    });
+
+libGulp.task
+(
+    'build',
+    libGulp.series('debug', 'minified')
 );
-
-libGulp.task('build-debug',
-    ()=>
-    {
-        return libBrowserify({entries: './source/Precedent', debug: true})
-            .transform("babelify", { presets: ["es2015"] })
-            .bundle()
-            .pipe(libVinylSource('precedent.'+_Version+'.js'))
-            .pipe(libVinylBuffer())
-            .pipe(libGulp.dest('./dist'));
-    }
-);
-
-libGulp.task('build', ['build-release','build-debug','copy-latest-release']);
-
-libGulp.task('build',
-    (fCallback) =>
-    {
-        libRunSequence(['build-debug', 'build-release'],
-            'copy-latest-release',
-            fCallback);
-    }
-);
-
-libGulp.task('default', ['build']);
