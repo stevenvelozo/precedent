@@ -28,7 +28,7 @@ class StringParser
 	{
 		return (
 		{
-		    ParseTree: pParseTree,
+			ParseTree: pParseTree,
 
 			Output: '',
 			OutputBuffer: '',
