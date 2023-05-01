@@ -16,7 +16,7 @@ class StringParser
 	constructor()
 	{
 	}
-	
+
 	/**
 	 * Create a fresh parsing state object to work with.
 	 * @method newParserState
@@ -39,7 +39,7 @@ class StringParser
 			PatternMatchOutputBuffer: ''
 		});
 	}
-		
+
 	/**
 	 * Assign a node of the parser tree to be the next potential match.
 	 * If the node has a PatternEnd property, it is a valid match and supercedes the last valid match (or becomes the initial match).
@@ -59,7 +59,7 @@ class StringParser
 			pParserState.Pattern = pParserState.PatternMatch;
 		}
 	}
-	
+
 	/**
 	 * Append a character to the output buffer in the parser state.
 	 * This output buffer is used when a potential match is being explored, or a match is being explored.
@@ -72,7 +72,7 @@ class StringParser
 	{
 		pParserState.OutputBuffer += pCharacter;
 	}
-	
+
 	/**
 	 * Flush the output buffer to the output and clear it.
 	 * @method flushOutputBuffer
@@ -85,21 +85,21 @@ class StringParser
 		pParserState.OutputBuffer = '';
 	}
 
-	
+
 	/**
 	 * Check if the pattern has ended.  If it has, properly flush the buffer and start looking for new patterns.
 	 * @method checkPatternEnd
 	 * @param {Object} pParserState - The state object for the current parsing task
 	 * @private
 	 */
-	checkPatternEnd (pParserState)
+	checkPatternEnd (pParserState, pData)
 	{
-		if ((pParserState.OutputBuffer.length >= pParserState.Pattern.PatternEnd.length+pParserState.Pattern.PatternStart.length) && 
+		if ((pParserState.OutputBuffer.length >= pParserState.Pattern.PatternEnd.length+pParserState.Pattern.PatternStart.length) &&
 			(pParserState.OutputBuffer.substr(-pParserState.Pattern.PatternEnd.length) === pParserState.Pattern.PatternEnd))
 		{
 			// ... this is the end of a pattern, cut off the end tag and parse it.
 			// Trim the start and end tags off the output buffer now
-			pParserState.OutputBuffer = pParserState.Pattern.Parse(pParserState.OutputBuffer.substr(pParserState.Pattern.PatternStart.length, pParserState.OutputBuffer.length - (pParserState.Pattern.PatternStart.length+pParserState.Pattern.PatternEnd.length)));
+			pParserState.OutputBuffer = pParserState.Pattern.Parse(pParserState.OutputBuffer.substr(pParserState.Pattern.PatternStart.length, pParserState.OutputBuffer.length - (pParserState.Pattern.PatternStart.length+pParserState.Pattern.PatternEnd.length)), pData);
 			// Flush the output buffer.
 			this.flushOutputBuffer(pParserState);
 			// End pattern mode
@@ -107,7 +107,7 @@ class StringParser
 			pParserState.PatternMatch = false;
 		}
 	}
-	
+
 	/**
 	 * Parse a character in the buffer.
 	 * @method parseCharacter
@@ -115,7 +115,7 @@ class StringParser
 	 * @param {Object} pParserState - The state object for the current parsing task
 	 * @private
 	 */
-	parseCharacter (pCharacter, pParserState)
+	parseCharacter (pCharacter, pParserState, pData)
 	{
 		// (1) If we aren't in a pattern match, and we aren't potentially matching, and this may be the start of a new pattern....
 		if (!pParserState.PatternMatch && pParserState.ParseTree.hasOwnProperty(pCharacter))
@@ -137,7 +137,7 @@ class StringParser
 			if (pParserState.Pattern)
 			{
 				// ... Check if this is the end of the pattern (if we are matching a valid pattern)...
-				this.checkPatternEnd(pParserState);
+				this.checkPatternEnd(pParserState, pData);
 			}
 		}
 		// (3) If we aren't in a pattern match or pattern, and this isn't the start of a new pattern (RAW mode)....
@@ -146,25 +146,26 @@ class StringParser
 			pParserState.Output += pCharacter;
 		}
 	}
-	
+
 	/**
 	 * Parse a string for matches, and process any template segments that occur.
 	 * @method parseString
 	 * @param {string} pString - The string to parse.
 	 * @param {Object} pParseTree - The parse tree to begin parsing from (usually root)
+	 * @param {Object} pData - The data to pass to the function as a second paramter
 	 */
-	parseString (pString, pParseTree)
+	parseString (pString, pParseTree, pData)
 	{
 		let tmpParserState = this.newParserState(pParseTree);
 
 		for (var i = 0; i < pString.length; i++)
 		{
 			// TODO: This is not fast.
-			this.parseCharacter(pString[i], tmpParserState);
+			this.parseCharacter(pString[i], tmpParserState, pData);
 		}
-		
+
 		this.flushOutputBuffer(tmpParserState);
-		
+
 		return tmpParserState.Output;
 	}
 }

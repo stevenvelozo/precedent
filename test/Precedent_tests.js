@@ -24,6 +24,10 @@ var configPrecedent = (pModule) =>
 	pModule.addPattern('<%#', '%>', (pData)=>{return pData.length});
 	// Replaces the string with the settings object...
 	pModule.addPattern('<%=', '%>', (pData)=>{return JSON.stringify(pModule.settings);});
+	// Do a data thingy
+	pModule.addPattern('<*', '*>', (pHash, pData)=>{return `pData is [${pData}] with a hash of [${pHash}]`});
+	// Do a data thingy
+	pModule.addPattern('<^', '^>', (pHash, pData)=>{return `hash of [${pHash}] from pData is ${pData[pHash]}`});
 	// This just escapes out pairs of $
 	pModule.addPattern('$');
 };
@@ -65,13 +69,13 @@ suite
 					(fDone) =>
 					{
 						var testPrecedent = loadPrecedentModule();
-						
+
 						Expect(Object.keys(testPrecedent.ParseTree).length).to.equal(0, 'There should be an empty tree on initialization.');
 						configPrecedent(testPrecedent);
 						Expect(Object.keys(testPrecedent.ParseTree).length).to.equal(2, 'The tree should grow properly.');
 
 						//console.log(JSON.stringify(testPrecedent.tree,null,4));
-						
+
 						var tmpResult = testPrecedent.parseString('');
 						Expect(tmpResult.length).to.equal(0, 'Parsing Empty Strings should Work...');
 
@@ -116,6 +120,34 @@ suite
 						var testPrecedent = loadPrecedentModule();
 						configPrecedent(testPrecedent);
 						var	tmpResult = testPrecedent.parseString(tmpTestString);
+						Expect(tmpResult).to.equal(tmpExpectedResult);
+						fDone();
+					}
+				);
+				test
+				(
+					'Leveraging pData a bit...',
+					(fDone) =>
+					{
+						var tmpTestString = 'The <*SomeValue*> pData up in here and a $comment$ as well.';
+						var tmpExpectedResult = 'The pData is [Yikes] with a hash of [SomeValue] pData up in here and a comment as well.';
+						var testPrecedent = loadPrecedentModule();
+						configPrecedent(testPrecedent);
+						var	tmpResult = testPrecedent.parseString(tmpTestString, 'Yikes');
+						Expect(tmpResult).to.equal(tmpExpectedResult);
+						fDone();
+					}
+				);
+				test
+				(
+					'Leveraging pData a using subobjects...',
+					(fDone) =>
+					{
+						var tmpTestString = 'The <^SomeValue^> pData up in here and a $comment$ as well.';
+						var tmpExpectedResult = 'The hash of [SomeValue] from pData is AirbornLight pData up in here and a comment as well.';
+						var testPrecedent = loadPrecedentModule();
+						configPrecedent(testPrecedent);
+						var	tmpResult = testPrecedent.parseString(tmpTestString, {SomeValue:'AirbornLight'});
 						Expect(tmpResult).to.equal(tmpExpectedResult);
 						fDone();
 					}
@@ -234,7 +266,7 @@ suite
 							'AAA '+process.env.PATH+' } BBB',
 
 							'AAA ${ ${PATH} BBB',
-							// Two start parameters isn't okay --- 
+							// Two start parameters isn't okay ---
 							// ...it passes the pattern processor the following (without quotes):
 							// " ${PATH"
 							// Which is not going to match an environment variable.  With the second

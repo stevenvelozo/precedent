@@ -18,12 +18,12 @@ class Precedent
 	constructor()
 	{
 		this.WordTree = new libWordTree();
-		
+
 		this.StringParser = new libStringParser();
 
 		this.ParseTree = this.WordTree.ParseTree;
 	}
-	
+
 	/**
 	 * Add a Pattern to the Parse Tree
 	 * @method addPattern
@@ -36,16 +36,17 @@ class Precedent
 	{
 		return this.WordTree.addPattern(pPatternStart, pPatternEnd, pParser);
 	}
-	
+
 	/**
 	 * Parse a string with the existing parse tree
 	 * @method parseString
 	 * @param {string} pString - The string to parse
+	 * @param {object} pData - Data to pass in as the second argument
 	 * @return {string} The result from the parser
 	 */
-	parseString(pString)
+	parseString(pString, pData)
 	{
-		return this.StringParser.parseString(pString, this.ParseTree);
+		return this.StringParser.parseString(pString, this.ParseTree, pData);
 	}
 }
 

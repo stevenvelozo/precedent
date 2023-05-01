@@ -1,0 +1,11 @@
+{
+	"EntrypointInputSourceFile": "./source/Precedent-Browser-Shim.js",
+
+	"LibraryObjectName": "Precedent",
+
+	"LibraryOutputFolder": "./dist/",
+
+	"LibraryUniminifiedFileName": "precedent.compatible.js",
+
+	"LibraryMinifiedFileName": "precedent.compatible.min.js"
+}
