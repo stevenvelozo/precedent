@@ -17,8 +17,8 @@ class WordTree
 	{
 		this.ParseTree = {};
 	}
-	
-	/** 
+
+	/**
 	 * Add a child character to a Parse Tree node
 	 * @method addChild
 	 * @param {Object} pTree - A parse tree to push the characters into
@@ -31,10 +31,10 @@ class WordTree
 	{
 		if (!pTree.hasOwnProperty(pPattern[pIndex]))
 			pTree[pPattern[pIndex]] = {};
-		
+
 		return pTree[pPattern[pIndex]];
 	}
-	
+
 	/** Add a Pattern to the Parse Tree
 	 * @method addPattern
 	 * @param {Object} pPatternStart - The starting string for the pattern (e.g. "${")
@@ -58,7 +58,7 @@ class WordTree
 
 		tmpLeaf.PatternStart = pPatternStart;
 		tmpLeaf.PatternEnd = ((typeof(pPatternEnd) === 'string') && (pPatternEnd.length > 0)) ? pPatternEnd : pPatternStart;
-		tmpLeaf.Parse = (typeof(pParser) === 'function') ? pParser : 
+		tmpLeaf.Parse = (typeof(pParser) === 'function') ? pParser :
 						(typeof(pParser) === 'string') ? () => { return pParser; } :
 						(pData) => { return pData; };
 
