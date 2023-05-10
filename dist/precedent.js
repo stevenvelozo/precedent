@@ -48,7 +48,6 @@
       /**
       * Simple browser shim loader - assign the npm module to a window global automatically
       *
-      * @license MIT
       * @author <steven@velozo.com>
       */
       var libNPMModuleWrapper = require('./Precedent.js');
@@ -275,7 +274,7 @@
           this.ParseTree = {};
         }
 
-        /** 
+        /**
          * Add a child character to a Parse Tree node
          * @method addChild
          * @param {Object} pTree - A parse tree to push the characters into
