@@ -5,7 +5,7 @@
 
 	"LibraryOutputFolder": "./dist/",
 
-	"LibraryUniminifiedFileName": "precedent.compatible.js",
+	"LibraryUniminifiedFileName": "precedent.js",
 
-	"LibraryMinifiedFileName": "precedent.compatible.min.js"
+	"LibraryMinifiedFileName": "precedent.min.js"
 }

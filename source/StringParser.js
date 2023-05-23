@@ -104,7 +104,7 @@ class StringParser
 			// Trim the start and end tags off the output buffer now
 			if (pParserState.Pattern.isAsync)
 			{
-				console.log(`ERROR: Async template detected for pattern ${pParserState.Pattern.PatternStart} ... ${pParserState.Pattern.PatternEnd} but the template engine is being run in non-async mode.`);
+				console.log(`Precedent ERROR: Async template detected for pattern ${pParserState.Pattern.PatternStart} ... ${pParserState.Pattern.PatternEnd} but the template engine is being run in non-async mode.`);
 				this.OutputBuffer = '';
 				// Flush the output buffer.
 				this.flushOutputBuffer(pParserState);
@@ -138,7 +138,7 @@ class StringParser
 					{
 						if (pError)
 						{
-							return fCallback(pError);
+							console.log(`Precedent ERROR: Async template error happened parsing ${pParserState.Pattern.PatternStart} ... ${pParserState.Pattern.PatternEnd}: ${pError}`);
 						}
 
 						pParserState.OutputBuffer = pAsyncOutput;
@@ -161,7 +161,7 @@ class StringParser
 				pParserState.PatternMatch = false;
 			}
 		}
-		
+
 		return fCallback();
 	}
 
