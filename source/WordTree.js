@@ -61,6 +61,38 @@ class WordTree
 		tmpLeaf.Parse = (typeof(pParser) === 'function') ? pParser :
 						(typeof(pParser) === 'string') ? () => { return pParser; } :
 						(pData) => { return pData; };
+		tmpLeaf.isPromise = false;
+
+		return true;
+	}
+
+	/** Add a Pattern to the Parse Tree (asynchronous)
+	 * @method addPattern
+	 * @param {Object} pPatternStart - The starting string for the pattern (e.g. "${")
+	 * @param {string} pPatternEnd - The ending string for the pattern (e.g. "}")
+	 * @param {number} pParserAsync - The function (with an asynchronous callback) to parse if this is the matched pattern, once the Pattern End is met.  If this is a string, a simple replacement occurs.
+	 * @return {bool} True if adding the pattern was successful
+	 */
+	addPatternAsync (pPatternStart, pPatternEnd, pParserAsync)
+	{
+		if (pPatternStart.length < 1)
+			return false;
+
+		if ((typeof(pPatternEnd) === 'string') && (pPatternEnd.length < 1))
+			return false;
+
+		let tmpLeaf = this.ParseTree;
+
+		// Add the tree of leaves iteratively
+		for (var i = 0; i < pPatternStart.length; i++)
+			tmpLeaf = this.addChild(tmpLeaf, pPatternStart, i);
+
+		tmpLeaf.PatternStart = pPatternStart;
+		tmpLeaf.PatternEnd = ((typeof(pPatternEnd) === 'string') && (pPatternEnd.length > 0)) ? pPatternEnd : pPatternStart;
+		tmpLeaf.Parse = (typeof(pParserAsync) === 'function') ? pParserAsync :
+						(typeof(pParserAsync) === 'string') ? (pHash, pData, fCallback) => { fCallback(pParserPromise); } :
+						(pHash, pData, fCallback) => { return fCallback(pHash); };
+		tmpLeaf.isAsync = true;
 
 		return true;
 	}
