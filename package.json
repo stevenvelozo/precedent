@@ -1,6 +1,6 @@
 {
   "name": "precedent",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Precedent Meta-Templating",
   "main": "source/Precedent.js",
   "bin": {
@@ -61,7 +61,5 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
-  "dependencies": {
-    "async": "^3.2.4"
-  }
+  "dependencies": {}
 }

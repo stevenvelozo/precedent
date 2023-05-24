@@ -30,12 +30,6 @@ var configPrecedent = (pModule) =>
 	pModule.addPattern('<^', '^>', (pHash, pData)=>{return `hash of [${pHash}] from pData is ${pData[pHash]}`});
 	// This just escapes out pairs of $
 	pModule.addPattern('$');
-
-	pModule.addPatternAsync('<%Async', '%>', 
-		(pHash, pData, fCallback)=>
-		{
-			return fCallback(null, `ASYNC DATA IS [${pHash}]`);
-		});
 };
 
 suite
@@ -156,23 +150,6 @@ suite
 						var	tmpResult = testPrecedent.parseString(tmpTestString, {SomeValue:'AirbornLight'});
 						Expect(tmpResult).to.equal(tmpExpectedResult);
 						fDone();
-					}
-				);
-				test
-				(
-					'Async Function',
-					(fDone) =>
-					{
-						var tmpTestString = 'The <^SomeValue^> pData and Async <%AsyncThe Funny String%> up in here and a $comment$ as well.';
-						var tmpExpectedResult = 'The hash of [SomeValue] from pData is AirbornLight pData up in here and a comment as well.';
-						var testPrecedent = loadPrecedentModule();
-						configPrecedent(testPrecedent);
-						var	tmpResult = testPrecedent.parseString(tmpTestString, {SomeValue:'AirbornLight'}, 
-							(pError, pValue) =>
-							{
-								Expect(pValue).to.equal('The hash of [SomeValue] from pData is AirbornLight pData and Async ASYNC DATA IS [The Funny String] up in here and a comment as well.');
-								return fDone();
-							});
 					}
 				);
 				test

@@ -37,11 +37,6 @@ class Precedent
 		return this.WordTree.addPattern(pPatternStart, pPatternEnd, pParser);
 	}
 
-	addPatternAsync(pPatternStart, pPatternEnd, pParserPromise)
-	{
-		return this.WordTree.addPatternAsync(pPatternStart, pPatternEnd, pParserPromise);
-	}
-
 	/**
 	 * Parse a string with the existing parse tree
 	 * @method parseString
@@ -49,9 +44,9 @@ class Precedent
 	 * @param {object} pData - Data to pass in as the second argument
 	 * @return {string} The result from the parser
 	 */
-	parseString(pString, pData, fCallback)
+	parseString(pString, pData)
 	{
-		return this.StringParser.parseString(pString, this.ParseTree, pData, fCallback);
+		return this.StringParser.parseString(pString, this.ParseTree, pData);
 	}
 }
 
