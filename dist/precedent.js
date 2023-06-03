@@ -1,3 +1,5 @@
+"use strict";
+
 (function (f) {
   if (typeof exports === "object" && typeof module !== "undefined") {
     module.exports = f();
@@ -46,20 +48,6 @@
   }()({
     1: [function (require, module, exports) {
       /**
-      * Simple browser shim loader - assign the npm module to a window global automatically
-      *
-      * @author <steven@velozo.com>
-      */
-      var libNPMModuleWrapper = require('./Precedent.js');
-      if (typeof window == 'object' && !window.hasOwnProperty('Precedent')) {
-        window.Precedent = libNPMModuleWrapper;
-      }
-      module.exports = libNPMModuleWrapper;
-    }, {
-      "./Precedent.js": 2
-    }],
-    2: [function (require, module, exports) {
-      /**
       * Precedent Meta-Templating
       *
       * @license     MIT
@@ -68,8 +56,8 @@
       *
       * @description Process text streams, parsing out meta-template expressions.
       */
-      var libWordTree = require(`./WordTree.js`);
-      var libStringParser = require(`./StringParser.js`);
+      var libWordTree = require("./WordTree.js");
+      var libStringParser = require("./StringParser.js");
       class Precedent {
         /**
          * Precedent Constructor
@@ -105,10 +93,10 @@
       }
       module.exports = Precedent;
     }, {
-      "./StringParser.js": 3,
-      "./WordTree.js": 4
+      "./StringParser.js": 2,
+      "./WordTree.js": 3
     }],
-    3: [function (require, module, exports) {
+    2: [function (require, module, exports) {
       /**
       * String Parser
       * @author      Steven Velozo <steven@velozo.com>
@@ -134,28 +122,10 @@
             Asynchronous: false,
             Output: '',
             OutputBuffer: '',
-            Pattern: false,
+            Pattern: {},
             PatternMatch: false,
-            PatternMatchOutputBuffer: ''
+            PatternMatchEnd: false
           };
-        }
-
-        /**
-         * Assign a node of the parser tree to be the next potential match.
-         * If the node has a PatternEnd property, it is a valid match and supercedes the last valid match (or becomes the initial match).
-         * @method assignNode
-         * @param {Object} pNode - A node on the parse tree to assign
-         * @param {Object} pParserState - The state object for the current parsing task
-         * @private
-         */
-        assignNode(pNode, pParserState) {
-          pParserState.PatternMatch = pNode;
-
-          // If the pattern has a END we can assume it has a parse function...
-          if (pParserState.PatternMatch.hasOwnProperty('PatternEnd')) {
-            // ... this is the legitimate start of a pattern.
-            pParserState.Pattern = pParserState.PatternMatch;
-          }
         }
 
         /**
@@ -180,24 +150,16 @@
           pParserState.Output += pParserState.OutputBuffer;
           pParserState.OutputBuffer = '';
         }
-
-        /**
-         * Check if the pattern has ended.  If it has, properly flush the buffer and start looking for new patterns.
-         * @method checkPatternEnd
-         * @param {Object} pParserState - The state object for the current parsing task
-         * @private
-         */
-        checkPatternEnd(pParserState, pData) {
-          if (pParserState.OutputBuffer.length >= pParserState.Pattern.PatternEnd.length + pParserState.Pattern.PatternStart.length && pParserState.OutputBuffer.substr(-pParserState.Pattern.PatternEnd.length) === pParserState.Pattern.PatternEnd) {
-            // ... this is the end of a pattern, cut off the end tag and parse it.
-            // Trim the start and end tags off the output buffer now
-            pParserState.OutputBuffer = pParserState.Pattern.Parse(pParserState.OutputBuffer.substr(pParserState.Pattern.PatternStart.length, pParserState.OutputBuffer.length - (pParserState.Pattern.PatternStart.length + pParserState.Pattern.PatternEnd.length)), pData);
-            // Flush the output buffer.
-            this.flushOutputBuffer(pParserState);
-            // End pattern mode
-            pParserState.Pattern = false;
-            pParserState.PatternMatch = false;
-          }
+        resetOutputBuffer(pParserState) {
+          // Flush the output buffer.
+          this.flushOutputBuffer(pParserState);
+          // End pattern mode
+          pParserState.Pattern = false;
+          pParserState.PatternStartNode = false;
+          pParserState.StartPatternMatchComplete = false;
+          pParserState.EndPatternMatchBegan = false;
+          pParserState.PatternMatch = false;
+          return true;
         }
 
         /**
@@ -208,29 +170,70 @@
          * @private
          */
         parseCharacter(pCharacter, pParserState, pData) {
-          // (1) If we aren't in a pattern match, and we aren't potentially matching, and this may be the start of a new pattern....
-          if (!pParserState.PatternMatch && pParserState.ParseTree.hasOwnProperty(pCharacter)) {
-            // ... assign the node as the matched node.
-            this.assignNode(pParserState.ParseTree[pCharacter], pParserState);
-            this.appendOutputBuffer(pCharacter, pParserState);
-          }
-          // (2) If we are in a pattern match (actively seeing if this is part of a new pattern token)
-          else if (pParserState.PatternMatch) {
-            // If the pattern has a subpattern with this key
-            if (pParserState.PatternMatch.hasOwnProperty(pCharacter)) {
-              // Continue matching patterns.
-              this.assignNode(pParserState.PatternMatch[pCharacter], pParserState);
+          // If we are already in a pattern match traversal
+          if (pParserState.PatternMatch) {
+            // If the pattern is still matching the start and we haven't passed the buffer
+            if (!pParserState.StartPatternMatchComplete && pParserState.Pattern.hasOwnProperty(pCharacter)) {
+              pParserState.Pattern = pParserState.Pattern[pCharacter];
+              this.appendOutputBuffer(pCharacter, pParserState);
+            } else if (pParserState.EndPatternMatchBegan) {
+              if (pParserState.Pattern.PatternEnd.hasOwnProperty(pCharacter)) {
+                // This leaf has a PatternEnd tree, so we will wait until that end is met.
+                pParserState.Pattern = pParserState.Pattern.PatternEnd[pCharacter];
+                // Flush the output buffer.
+                this.appendOutputBuffer(pCharacter, pParserState);
+                // If this last character is the end of the pattern, parse it.
+                if (pParserState.Pattern.hasOwnProperty('Parse')) {
+                  // Run the function
+                  pParserState.OutputBuffer = pParserState.Pattern.Parse(pParserState.OutputBuffer.substr(pParserState.Pattern.PatternStartString.length, pParserState.OutputBuffer.length - (pParserState.Pattern.PatternStartString.length + pParserState.Pattern.PatternEndString.length)), pData);
+                  return this.resetOutputBuffer(pParserState);
+                }
+              } else if (pParserState.PatternStartNode.PatternEnd.hasOwnProperty(pCharacter)) {
+                // We broke out of the end -- see if this is a new start of the end.
+                pParserState.Pattern = pParserState.PatternStartNode.PatternEnd[pCharacter];
+                this.appendOutputBuffer(pCharacter, pParserState);
+              } else {
+                pParserState.EndPatternMatchBegan = false;
+                this.appendOutputBuffer(pCharacter, pParserState);
+              }
+            } else if (pParserState.Pattern.hasOwnProperty('PatternEnd')) {
+              if (!pParserState.StartPatternMatchComplete) {
+                pParserState.StartPatternMatchComplete = true;
+                pParserState.PatternStartNode = pParserState.Pattern;
+              }
+              this.appendOutputBuffer(pCharacter, pParserState);
+              if (pParserState.Pattern.PatternEnd.hasOwnProperty(pCharacter)) {
+                // This is the first character of the end pattern.
+                pParserState.EndPatternMatchBegan = true;
+                // This leaf has a PatternEnd tree, so we will wait until that end is met.
+                pParserState.Pattern = pParserState.Pattern.PatternEnd[pCharacter];
+                // If this last character is the end of the pattern, parse it.
+                if (pParserState.Pattern.hasOwnProperty('Parse')) {
+                  // Run the t*mplate function
+                  pParserState.OutputBuffer = pParserState.Pattern.Parse(pParserState.OutputBuffer.substr(pParserState.Pattern.PatternStartString.length, pParserState.OutputBuffer.length - (pParserState.Pattern.PatternStartString.length + pParserState.Pattern.PatternEndString.length)), pData);
+                  return this.resetOutputBuffer(pParserState);
+                }
+              }
+            } else {
+              // We are in a pattern start but didn't match one; reset and start trying again from this character.
+              this.resetOutputBuffer(pParserState);
             }
-            this.appendOutputBuffer(pCharacter, pParserState);
-            if (pParserState.Pattern) {
-              // ... Check if this is the end of the pattern (if we are matching a valid pattern)...
-              this.checkPatternEnd(pParserState, pData);
+          }
+          // If we aren't in a pattern match or pattern, and this isn't the start of a new pattern (RAW mode)....
+          if (!pParserState.PatternMatch) {
+            // This may be the start of a new pattern....
+            if (pParserState.ParseTree.hasOwnProperty(pCharacter)) {
+              // ... assign the root node as the matched node.
+              this.resetOutputBuffer(pParserState);
+              this.appendOutputBuffer(pCharacter, pParserState);
+              pParserState.Pattern = pParserState.ParseTree[pCharacter];
+              pParserState.PatternMatch = true;
+              return true;
+            } else {
+              this.appendOutputBuffer(pCharacter, pParserState);
             }
           }
-          // (3) If we aren't in a pattern match or pattern, and this isn't the start of a new pattern (RAW mode)....
-          else {
-            pParserState.Output += pCharacter;
-          }
+          return false;
         }
 
         /**
@@ -251,7 +254,7 @@
       }
       module.exports = StringParser;
     }, {}],
-    4: [function (require, module, exports) {
+    3: [function (require, module, exports) {
       /**
       * Word Tree
       * @author      Steven Velozo <steven@velozo.com>
@@ -271,33 +274,63 @@
          * @method addChild
          * @param {Object} pTree - A parse tree to push the characters into
          * @param {string} pPattern - The string to add to the tree
-         * @param {number} pIndex - The index of the character in the pattern
          * @returns {Object} The resulting leaf node that was added (or found)
          * @private
          */
-        addChild(pTree, pPattern, pIndex) {
-          if (!pTree.hasOwnProperty(pPattern[pIndex])) pTree[pPattern[pIndex]] = {};
-          return pTree[pPattern[pIndex]];
+        addChild(pTree, pPattern) {
+          if (!pTree.hasOwnProperty(pPattern)) {
+            pTree[pPattern] = {};
+          }
+          return pTree[pPattern];
+        }
+
+        /**
+         * Add a child character to a Parse Tree PatternEnd subtree
+         * @method addChild
+         * @param {Object} pTree - A parse tree to push the characters into
+         * @param {string} pPattern - The string to add to the tree
+         * @returns {Object} The resulting leaf node that was added (or found)
+         * @private
+         */
+        addEndChild(pTree, pPattern) {
+          if (!pTree.hasOwnProperty('PatternEnd')) {
+            pTree.PatternEnd = {};
+          }
+          pTree.PatternEnd[pPattern] = {};
+          return pTree.PatternEnd[pPattern];
         }
 
         /** Add a Pattern to the Parse Tree
          * @method addPattern
          * @param {Object} pPatternStart - The starting string for the pattern (e.g. "${")
          * @param {string} pPatternEnd - The ending string for the pattern (e.g. "}")
-         * @param {number} pParser - The function to parse if this is the matched pattern, once the Pattern End is met.  If this is a string, a simple replacement occurs.
+         * @param {function} fParser - The function to parse if this is the matched pattern, once the Pattern End is met.  If this is a string, a simple replacement occurs.
          * @return {bool} True if adding the pattern was successful
          */
-        addPattern(pPatternStart, pPatternEnd, pParser) {
-          if (pPatternStart.length < 1) return false;
-          if (typeof pPatternEnd === 'string' && pPatternEnd.length < 1) return false;
+        addPattern(pPatternStart, pPatternEnd, fParser) {
+          if (pPatternStart.length < 1) {
+            return false;
+          }
+          if (typeof pPatternEnd === 'string' && pPatternEnd.length < 1) {
+            return false;
+          }
           let tmpLeaf = this.ParseTree;
 
           // Add the tree of leaves iteratively
-          for (var i = 0; i < pPatternStart.length; i++) tmpLeaf = this.addChild(tmpLeaf, pPatternStart, i);
-          tmpLeaf.PatternStart = pPatternStart;
-          tmpLeaf.PatternEnd = typeof pPatternEnd === 'string' && pPatternEnd.length > 0 ? pPatternEnd : pPatternStart;
-          tmpLeaf.Parse = typeof pParser === 'function' ? pParser : typeof pParser === 'string' ? () => {
-            return pParser;
+          for (var i = 0; i < pPatternStart.length; i++) {
+            tmpLeaf = this.addChild(tmpLeaf, pPatternStart[i], i);
+          }
+          if (!tmpLeaf.hasOwnProperty('PatternEnd')) {
+            tmpLeaf.PatternEnd = {};
+          }
+          let tmpPatternEnd = typeof pPatternEnd === 'string' ? pPatternEnd : pPatternStart;
+          for (let i = 0; i < tmpPatternEnd.length; i++) {
+            tmpLeaf = this.addEndChild(tmpLeaf, tmpPatternEnd[i], i);
+          }
+          tmpLeaf.PatternStartString = pPatternStart;
+          tmpLeaf.PatternEndString = tmpPatternEnd;
+          tmpLeaf.Parse = typeof fParser === 'function' ? fParser : typeof fParser === 'string' ? () => {
+            return fParser;
           } : pData => {
             return pData;
           };
