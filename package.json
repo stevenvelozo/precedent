@@ -47,6 +47,6 @@
         ]
     },
     "devDependencies": {
-        "quackage": "^1.0.14"
+        "quackage": "^1.0.48"
     }
 }

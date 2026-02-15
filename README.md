@@ -1,76 +1,144 @@
 # Precedent
-Precedent meta-templating engine, for when you want templates ... for templates.
 
-[![Code Climate](https://codeclimate.com/github/stevenvelozo/precedent/badges/gpa.svg)](https://codeclimate.com/github/stevenvelozo/precedent) [![Build Status](https://travis-ci.org/stevenvelozo/precedent.svg?branch=master)](https://travis-ci.org/stevenvelozo/precedent) [![Dependency Status](https://david-dm.org/stevenvelozo/precedent.svg)](https://david-dm.org/stevenvelozo/precedent) [![devDependency Status](https://david-dm.org/stevenvelozo/precedent/dev-status.svg)](https://david-dm.org/stevenvelozo/precedent#info=devDependencies)
+A meta-templating engine for processing text streams with pattern-based template expressions. Define start/end pattern markers with string or function parsers, and Precedent handles nested pattern resolution automatically.
 
-## Template Patterns
-
-Precedent works on the concept of "Template Patterns".  These are regions of text that are replaced by their template function.  Because patterns are defined in a tree data structure, nested patterns (such as `<%`, `<%=`, `<$$` and `<`) properly get parsed in the same process run.
-
-So, for instance, you could create a pattern like so:
-
-
-```js
-// Load the precedent library
-var libPrecedent = require('../source/Precedent.js').new();
-
-// Add the pattern
-libPrecedent.addPattern('{Name', '}', 'David Bowie');
-
-// Parse a string with the pattern
-console.log(libPrecedent.parseString('This is just a short message for {Name}.');
-// Anything inbetween the start and end is ignored in this case, since it is a string substitution.
-console.log(libPrecedent.parseString('This is just a short message for {Name THIS TEXT IS IGNORED}.  We hope to ignore the previous text.');
-```
-
-This would output the following to the console:
-
-```
-This is just a short message for David Bowie.
-This is just a short message for David Bowie.  We hope to ignore the previous text.
-```
+[![Coverage Status](https://coveralls.io/repos/github/stevenvelozo/precedent/badge.svg?branch=master)](https://coveralls.io/github/stevenvelozo/precedent?branch=master)
+[![Build Status](https://github.com/stevenvelozo/precedent/workflows/Precedent/badge.svg)](https://github.com/stevenvelozo/precedent/actions)
+[![npm version](https://badge.fury.io/js/precedent.svg)](https://badge.fury.io/js/precedent)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## precedent.addPattern(patternStart, patternEnd, parser)
+## Features
 
-Add a pattern to the string processor.
+- **Pattern-Based Parsing** - Define start/end markers to identify template regions in text
+- **String or Function Parsers** - Replace patterns with static strings or dynamic function output
+- **Nested Pattern Support** - Overlapping pattern prefixes (e.g. `<%`, `<%=`, `<$$`) resolve correctly in a single pass
+- **Word Tree Architecture** - Patterns are stored in a tree structure for efficient matching
+- **Data Passing** - Pass a data object through to parser functions for context-aware rendering
+- **Browser Compatible** - Works in both Node.js and browser environments
+- **Zero Dependencies** - No external runtime dependencies
 
-```javascript
-// Pass in a string
-libPrecedent.addPattern('{Name', '}', 'David Bowie');
+## Installation
 
-// Or a function
-libPrecedent.addPattern('{Name', '}', (pString)=>{return pString.length;});
+```bash
+npm install precedent
 ```
 
-Each time a pattern is matched, anything between the `patternStart` and `patternEnd` will be passed into the parse function.
-
-#### patternStart
-Type: `String`
-
-The beginning portion of a pattern.
-
-#### patternEnd
-Type: `String`
-
-The ending portion of a pattern.
-
-##### parser
-Type: `String` or `Function`
-Default: Echo content between the pattern start and end.
-
----
-
-## precedent.parseString(contentString)
-
-Parse a string with the processor.
+## Quick Start
 
 ```javascript
-libPrecedent.parseString('This is just a short message for {Name}.'
+const Precedent = require('precedent');
+
+const precedent = new Precedent();
+
+// Add a simple string substitution pattern
+precedent.addPattern('{Name', '}', 'David Bowie');
+
+// Parse a string containing the pattern
+precedent.parseString('Hello, {Name}!');
+// => "Hello, David Bowie!"
 ```
 
-#### contentString
-Type: `String`
+## Usage
 
-The string of content to parseg
+### String Substitution
+
+Replace patterns with a fixed string value. Content between the start and end markers is ignored:
+
+```javascript
+const precedent = new Precedent();
+
+precedent.addPattern('{Name', '}', 'David Bowie');
+
+precedent.parseString('A message for {Name}.');
+// => "A message for David Bowie."
+
+// Content between markers is ignored for string substitutions
+precedent.parseString('A message for {Name IGNORED TEXT}.');
+// => "A message for David Bowie."
+```
+
+### Function-Based Parsing
+
+Pass a function as the parser to dynamically process the content between markers:
+
+```javascript
+const precedent = new Precedent();
+
+precedent.addPattern('{Length', '}', (pString) => { return pString.length; });
+
+precedent.parseString('The length is {Length some text}.');
+// => "The length is  some text."  (length of " some text")
+```
+
+### Passing Data to Parsers
+
+A data object can be passed as the second argument to `parseString`, which is then available to parser functions:
+
+```javascript
+const precedent = new Precedent();
+
+precedent.addPattern('<%=', '%>', (pContent, pData) =>
+{
+	return pData[pContent.trim()] || '';
+});
+
+precedent.parseString('Hello, <%= username %>!', { username: 'Steven' });
+// => "Hello, Steven!"
+```
+
+## API
+
+### `addPattern(patternStart, patternEnd, parser)`
+
+Add a pattern to the parse tree.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `patternStart` | `String` | The opening marker for the pattern |
+| `patternEnd` | `String` | The closing marker for the pattern |
+| `parser` | `String` or `Function` | Replacement string, or function receiving `(content, data)` |
+
+Returns `true` if the pattern was added successfully.
+
+### `parseString(contentString, data)`
+
+Parse a string against all registered patterns.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `contentString` | `String` | The text to parse |
+| `data` | `Object` | Optional data object passed to parser functions |
+
+Returns the parsed string.
+
+## Part of the Retold Framework
+
+Precedent is used throughout the Fable ecosystem for template processing:
+
+- [fable](https://github.com/stevenvelozo/fable) - Application services framework
+- [pict](https://github.com/stevenvelozo/pict) - UI framework
+- [pict-template](https://github.com/stevenvelozo/pict-template) - Template engine built on Precedent
+
+## Testing
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+Run with coverage:
+
+```bash
+npm run coverage
+```
+
+## License
+
+MIT - See [LICENSE](LICENSE) for details.
+
+## Author
+
+Steven Velozo - [steven@velozo.com](mailto:steven@velozo.com)
