@@ -1,6 +1,6 @@
 {
     "name": "precedent",
-    "version": "1.0.15",
+    "version": "1.0.16",
     "description": "Precedent Meta-Templating",
     "main": "source/Precedent.js",
     "bin": {
