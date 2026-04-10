@@ -240,10 +240,10 @@ processor.parseString('<<here>');
 
 processor.parseString('<<<<>');
 // => "MEDIUM"
-// First << matches MEDIUM, then << begins a new match, then > closes it → MEDIUM
+// First << matches MEDIUM, then << begins a new match, then > closes it -> MEDIUM
 ```
 
-This behavior is automatic — the word tree disambiguates overlapping prefixes without any explicit priority configuration.
+This behavior is automatic -- the word tree disambiguates overlapping prefixes without any explicit priority configuration.
 
 ---
 
@@ -416,14 +416,14 @@ let final = formatProcessor.parseString(afterEnv);
 // => "ALICE"
 ```
 
-Each Precedent instance is independent — they do not share patterns or state.
+Each Precedent instance is independent -- they do not share patterns or state.
 
 ---
 
 ## Tips
 
-- **Delimiter choice** — Pick delimiters that do not appear naturally in your text. Multi-character delimiters (like `<%` or `{~`) are safer than single characters.
-- **Handler return type** — Handlers must return a string (or a value that coerces to string). Returning `undefined` or `null` produces the string `"undefined"` or `"null"`.
-- **No nesting** — Precedent does not support nested patterns of the same type. If `{` is a start delimiter, a `{` inside the content is treated as content, not a new match.
-- **Single pass** — Parsing happens in one pass. If a handler's output contains delimiters, they are not re-processed (unless you run a second `parseString()` call).
-- **Thread safety** — Instances are not shared state. Create one per context if needed.
+- **Delimiter choice** -- Pick delimiters that do not appear naturally in your text. Multi-character delimiters (like `<%` or `{~`) are safer than single characters.
+- **Handler return type** -- Handlers must return a string (or a value that coerces to string). Returning `undefined` or `null` produces the string `"undefined"` or `"null"`.
+- **No nesting** -- Precedent does not support nested patterns of the same type. If `{` is a start delimiter, a `{` inside the content is treated as content, not a new match.
+- **Single pass** -- Parsing happens in one pass. If a handler's output contains delimiters, they are not re-processed (unless you run a second `parseString()` call).
+- **Thread safety** -- Instances are not shared state. Create one per context if needed.

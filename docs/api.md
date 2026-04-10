@@ -56,11 +56,11 @@ Register a delimiter pair and a handler with the parse tree.
 | `pPatternEnd` | string | No | The closing delimiter (e.g. `'}'`, `'%>'`, `'>'`). If omitted, defaults to `pPatternStart` |
 | `pParser` | string \| function | No | The handler (see below) |
 
-**Returns:** `boolean` — `true` if the pattern was added, `false` if the start or end delimiter was empty.
+**Returns:** `boolean` -- `true` if the pattern was added, `false` if the start or end delimiter was empty.
 
 #### Handler Types
 
-**String handler** — Replace the matched region with this literal string:
+**String handler** -- Replace the matched region with this literal string:
 
 ```javascript
 processor.addPattern('<%', '%>', 'REPLACED');
@@ -68,7 +68,7 @@ processor.parseString('A <%stuff%> B');
 // => "A REPLACED B"
 ```
 
-**Function handler** — Called with two arguments:
+**Function handler** -- Called with two arguments:
 
 | Argument | Description |
 |----------|-------------|
@@ -86,7 +86,7 @@ processor.parseString('Count: <%#ABCDE%>');
 // => "Count: 5"
 ```
 
-**No handler** — The content between delimiters is passed through (delimiters are stripped):
+**No handler** -- The content between delimiters is passed through (delimiters are stripped):
 
 ```javascript
 processor.addPattern('$');
@@ -117,7 +117,7 @@ Parse a string against all registered patterns, replacing matched regions with h
 | `pString` | string | Yes | The text to parse |
 | `pData` | any | No | Passed as the second argument to every function handler |
 
-**Returns:** `string` — The processed string with all matched patterns replaced.
+**Returns:** `string` -- The processed string with all matched patterns replaced.
 
 ```javascript
 processor.addPattern('{', '}',
@@ -139,7 +139,7 @@ If no patterns match, the input string is returned unchanged.
 
 ## Class: WordTree
 
-Builds and maintains the internal directed graph for pattern matching. You rarely interact with this directly — `Precedent.addPattern()` delegates to it.
+Builds and maintains the internal directed graph for pattern matching. You rarely interact with this directly -- `Precedent.addPattern()` delegates to it.
 
 ### addPattern(pPatternStart, pPatternEnd, fParser)
 
@@ -168,7 +168,7 @@ Multiple patterns sharing a prefix character (e.g. `<`, `<<`, `<<LONG`) branch n
 
 ## Class: StringParser
 
-Character-by-character parser that traverses the WordTree and executes handler functions. You rarely interact with this directly — `Precedent.parseString()` delegates to it.
+Character-by-character parser that traverses the WordTree and executes handler functions. You rarely interact with this directly -- `Precedent.parseString()` delegates to it.
 
 ### parseString(pString, pParseTree, pData)
 
@@ -185,13 +185,13 @@ Scans the input string one character at a time, maintaining a state object that 
 
 ### Parsing Flow
 
-1. **Raw mode** — Characters are buffered directly to output
-2. **Start match** — A character matches the tree root; parser begins traversing the tree
-3. **Content capture** — Start delimiter fully matched; characters are buffered as content
-4. **End match** — End delimiter characters begin matching the PatternEnd subtree
-5. **Execution** — End delimiter fully matched; handler is called with `(content, data)`
-6. **Replacement** — Handler output replaces the entire matched region (delimiters + content)
-7. **Reset** — Parser returns to raw mode
+1. **Raw mode** -- Characters are buffered directly to output
+2. **Start match** -- A character matches the tree root; parser begins traversing the tree
+3. **Content capture** -- Start delimiter fully matched; characters are buffered as content
+4. **End match** -- End delimiter characters begin matching the PatternEnd subtree
+5. **Execution** -- End delimiter fully matched; handler is called with `(content, data)`
+6. **Replacement** -- Handler output replaces the entire matched region (delimiters + content)
+7. **Reset** -- Parser returns to raw mode
 
 If a partial start match fails (the next character does not continue the tree path), the buffered characters are flushed as-is and the parser resets to raw mode.
 

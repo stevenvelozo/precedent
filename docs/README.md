@@ -40,7 +40,7 @@ The handler can be:
 | Type | Behavior |
 |------|----------|
 | **string** | The matched region is replaced with this string |
-| **function** | Called with `(content, data)` — content between delimiters and the data argument from `parseString()` |
+| **function** | Called with `(content, data)` -- content between delimiters and the data argument from `parseString()` |
 | **omitted** | The content between delimiters is passed through unchanged |
 
 ### 3. Data Passing
@@ -88,7 +88,7 @@ If a longer match starts but fails to complete, the parser falls back to the sho
 │  End delimiters are stored as    │
 │  subtrees on the terminal node.  │
 │                                  │
-│   $ ──▶ { ──▶ PatternEnd ──▶ }  │
+│   $ ──> { ──> PatternEnd ──> }  │
 │                       └─ Parse() │
 └──────────────────────────────────┘
                        │
@@ -105,7 +105,7 @@ If a longer match starts but fails to complete, the parser falls back to the sho
 └──────────────────────────────────┘
 ```
 
-The parser is stateful and stream-oriented — it processes one character at a time, tracking whether it is in raw mode, matching a start delimiter, buffering content, or matching an end delimiter.
+The parser is stateful and stream-oriented -- it processes one character at a time, tracking whether it is in raw mode, matching a start delimiter, buffering content, or matching an end delimiter.
 
 ## Architecture
 
@@ -113,7 +113,7 @@ Precedent consists of three classes:
 
 | Class | Responsibility |
 |-------|---------------|
-| **Precedent** | Public facade — exposes `addPattern()` and `parseString()` |
+| **Precedent** | Public facade -- exposes `addPattern()` and `parseString()` |
 | **WordTree** | Stores delimiter patterns in a character-based tree structure |
 | **StringParser** | Character-by-character parser that traverses the tree and invokes handlers |
 
