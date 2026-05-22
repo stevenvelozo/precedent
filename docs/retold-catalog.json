@@ -1,70 +1,83 @@
 {
-	"Generated": "2026-04-10T17:27:35.113Z",
+	"Generated": "2026-05-22T05:48:52.536Z",
+	"Mode": "module",
 	"GitHubOrg": "stevenvelozo",
 	"DefaultBranch": "master",
-	"Groups": [
-		{
-			"Name": ".config",
-			"Key": ".config",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "code-server",
-					"Repo": "code-server",
-					"Group": ".config",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				},
-				{
-					"Name": "configstore",
-					"Repo": "configstore",
-					"Group": ".config",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		},
-		{
-			"Name": "Dist",
-			"Key": "dist",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "indoctrinate_content_staging",
-					"Repo": "indoctrinate_content_staging",
-					"Group": "dist",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		},
-		{
-			"Name": "Docs",
-			"Key": "docs",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "css",
-					"Repo": "css",
-					"Group": "docs",
-					"Branch": "master",
-					"HasDocs": true,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": [
-						"css/docuserve.css"
-					]
-				}
-			]
-		}
-	]
+	"Module": {
+		"Name": "precedent",
+		"Repo": "precedent",
+		"Group": "",
+		"Branch": "master",
+		"HasDocs": true,
+		"HasCover": true,
+		"Sidebar": [
+			{
+				"Title": "Getting Started",
+				"Children": [
+					{
+						"Title": "Overview",
+						"Path": "README.md"
+					}
+				]
+			},
+			{
+				"Title": "Reference",
+				"Children": [
+					{
+						"Title": "API Reference",
+						"Path": "api.md"
+					}
+				]
+			},
+			{
+				"Title": "Examples",
+				"Children": [
+					{
+						"Title": "Usage Patterns",
+						"Path": "examples.md"
+					}
+				]
+			},
+			{
+				"Title": "Retold Ecosystem",
+				"Children": [
+					{
+						"Title": "Pict",
+						"Path": "pict/pict/README.md"
+					},
+					{
+						"Title": "Pict Template",
+						"Path": "pict/pict-template/README.md"
+					},
+					{
+						"Title": "Fable",
+						"Path": "fable/fable/README.md"
+					},
+					{
+						"Title": "Fable Settings",
+						"Path": "fable/fable-settings/README.md"
+					},
+					{
+						"Title": "Indoctrinate",
+						"Path": "utility/indoctrinate/README.md"
+					}
+				]
+			}
+		],
+		"DocFiles": [
+			".nojekyll",
+			"README.md",
+			"_brand.json",
+			"_cover.md",
+			"_sidebar.md",
+			"_topbar.md",
+			"_version.json",
+			"api.md",
+			"examples.md",
+			"index.html",
+			"retold-catalog.json",
+			"retold-keyword-index.json"
+		]
+	},
+	"Groups": []
 }
