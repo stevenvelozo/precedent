@@ -1,5 +1,7 @@
 # Precedent
 
+> **[&#9654; Read the Precedent Documentation](https://stevenvelozo.github.io/precedent/)** &mdash; interactive docs with the full API reference.
+
 A meta-templating engine for processing text streams with pattern-based template expressions. Define start/end pattern markers with string or function parsers, and Precedent handles nested pattern resolution automatically.
 
 [![Coverage Status](https://coveralls.io/repos/github/stevenvelozo/precedent/badge.svg?branch=master)](https://coveralls.io/github/stevenvelozo/precedent?branch=master)
