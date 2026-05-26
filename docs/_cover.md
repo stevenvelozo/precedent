@@ -12,4 +12,4 @@ Define arbitrary delimiter patterns and replace them with strings, computed valu
 
 [Quick Start](README.md)
 [API Reference](api.md)
-[GitHub](https://github.com/stevenvelozo/precedent)
+[GitHub](https://github.com/fable-retold/precedent)
