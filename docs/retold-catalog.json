@@ -1,7 +1,7 @@
 {
-	"Generated": "2026-05-22T05:48:52.536Z",
+	"Generated": "2026-05-26T18:25:49.080Z",
 	"Mode": "module",
-	"GitHubOrg": "stevenvelozo",
+	"GitHubOrg": "fable-retold",
 	"DefaultBranch": "master",
 	"Module": {
 		"Name": "precedent",
@@ -43,23 +43,23 @@
 				"Children": [
 					{
 						"Title": "Pict",
-						"Path": "pict/pict/README.md"
+						"Path": "https://fable-retold.github.io/pict/README.md"
 					},
 					{
 						"Title": "Pict Template",
-						"Path": "pict/pict-template/README.md"
+						"Path": "https://fable-retold.github.io/pict-template/README.md"
 					},
 					{
 						"Title": "Fable",
-						"Path": "fable/fable/README.md"
+						"Path": "https://fable-retold.github.io/fable/README.md"
 					},
 					{
 						"Title": "Fable Settings",
-						"Path": "fable/fable-settings/README.md"
+						"Path": "https://fable-retold.github.io/fable-settings/README.md"
 					},
 					{
 						"Title": "Indoctrinate",
-						"Path": "utility/indoctrinate/README.md"
+						"Path": "https://fable-retold.github.io/indoctrinate/README.md"
 					}
 				]
 			}
