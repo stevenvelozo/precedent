@@ -4,9 +4,7 @@
 
 A meta-templating engine for processing text streams with pattern-based template expressions. Define start/end pattern markers with string or function parsers, and Precedent handles nested pattern resolution automatically.
 
-[![Build Status](https://github.com/fable-retold/precedent/workflows/Precedent/badge.svg)](https://github.com/fable-retold/precedent/actions)
-[![npm version](https://badge.fury.io/js/precedent.svg)](https://badge.fury.io/js/precedent)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[precedent on npm](https://www.npmjs.com/package/precedent) | [MIT License](LICENSE)
 
 ---
 
