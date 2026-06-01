@@ -1,6 +1,6 @@
 # Precedent
 
-> **[&#9654; Read the Precedent Documentation](https://fable-retold.github.io/precedent/)** &mdash; interactive docs with the full API reference.
+> **[Read the Precedent Documentation](https://fable-retold.github.io/precedent/)** - interactive docs with the full API reference.
 
 A meta-templating engine for processing text streams with pattern-based template expressions. Define start/end pattern markers with string or function parsers, and Precedent handles nested pattern resolution automatically.
 
