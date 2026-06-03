@@ -1,0 +1,5 @@
+graph TD
+    AddPattern["addPattern('${', '}', fn)"]
+    WordTree["WordTree<br/>Builds a character-by-character<br/>tree from start delimiters.<br/>End delimiters are stored as<br/>subtrees on the terminal node.<br/>$ --&gt; { --&gt; PatternEnd --&gt; }<br/>└─ Parse()"]
+    StringParser["StringParser<br/>Scans character by character:<br/>1. Match start delimiter chars<br/>2. Buffer content<br/>3. Match end delimiter chars<br/>4. Call Parse(content, data)<br/>5. Replace matched region"]
+    AddPattern --> WordTree --> StringParser

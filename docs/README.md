@@ -76,34 +76,8 @@ If a longer match starts but fails to complete, the parser falls back to the sho
 
 ## How It Works
 
-```
-             addPattern('${', '}', fn)
-                       │
-                       ▼
-┌──────────────────────────────────┐
-│  WordTree                        │
-│                                  │
-│  Builds a character-by-character │
-│  tree from start delimiters.     │
-│  End delimiters are stored as    │
-│  subtrees on the terminal node.  │
-│                                  │
-│   $ ──> { ──> PatternEnd ──> }  │
-│                       └─ Parse() │
-└──────────────────────────────────┘
-                       │
-                       ▼
-┌──────────────────────────────────┐
-│  StringParser                    │
-│                                  │
-│  Scans character by character:   │
-│  1. Match start delimiter chars  │
-│  2. Buffer content               │
-│  3. Match end delimiter chars    │
-│  4. Call Parse(content, data)    │
-│  5. Replace matched region       │
-└──────────────────────────────────┘
-```
+<!-- bespoke diagram: edit diagrams/how-it-works.mmd or .hints.json, then: npx pict-renderer-graph build modules/utility/precedent/docs -->
+![How It Works](diagrams/how-it-works.svg)
 
 The parser is stateful and stream-oriented -- it processes one character at a time, tracking whether it is in raw mode, matching a start delimiter, buffering content, or matching an end delimiter.
 
