@@ -151,16 +151,8 @@ Adds a pattern to the tree. Each character of the start delimiter becomes a node
 
 For `addPattern('${', '}', fn)`, the tree looks like:
 
-```
-ParseTree
-  └── '$'
-       └── '{'
-            └── PatternEnd
-                 └── '}'
-                      ├── PatternStartString: '${'
-                      ├── PatternEndString: '}'
-                      └── Parse: fn
-```
+<!-- bespoke diagram: edit diagrams/tree-structure.mmd or .hints.json, then: npx pict-renderer-graph build modules/utility/precedent/docs -->
+![Tree Structure](diagrams/tree-structure.svg)
 
 Multiple patterns sharing a prefix character (e.g. `<`, `<<`, `<<LONG`) branch naturally within the tree, enabling longest-match-first behavior.
 
